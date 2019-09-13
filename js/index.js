@@ -3,7 +3,7 @@ var defaultPagePath='app/pages/';
 var headerMsg = "Expenzing";
 //var urlPath = 'http://1.255.255.36:13130/TnEV1_0AWeb/WebService/Login/'
 //var WebServicePath ='http://1.255.255.184:8085/NexstepWebService/mobileLinkResolver.service';
-var WebServicePath = 'http://live.nexstepapps.com:8284/NexstepWebService/mobileLinkResolver.service';
+var WebServicePath = 'http://1.255.255.107:8089/NexstepWebService/mobileLinkResolver.service';
 //var WebServicePath ='http://1.255.255.36:9898/NexstepWebService/mobileLinkResolver.service';
 //var WebServicePath ='http://1.255.255.170:8085/NexstepWebService/mobileLinkResolver.service';
 var clickedFlagCar = false;
@@ -54,6 +54,7 @@ function login()
     jsonToBeSend["pass"] = password.value;
 	//setUrlPathLocalStorage(urlPath);
 	urlPath=window.localStorage.getItem("urlPath");
+	
 	j('#loading').show();
     j.ajax({
          url: urlPath+"LoginWebService",
@@ -108,7 +109,19 @@ function login()
                  }
                 }
 			
-			}else if(data.Status == 'Failure'){
+			}else if(data.Status=='AuthenticationFailed'){
+
+	         	 	successMessage = data.Message;
+	         	 	headerBackBtn=defaultPagePath+'expenzingImagePage.html';
+					pgRef=defaultPagePath+'loginPage.html';
+					setUserStatusInLocalStorage("Invalid");
+					j('#mainHeader').load(headerBackBtn);
+             		j('#mainContainer').load(pgRef,function() {
+  						document.getElementById("loginErrorMsg").innerHTML = successMessage;
+		 			   j('#loginErrorMsg').hide().fadeIn('slow').delay(4000).fadeOut('slow');
+		 			   j('#loading').hide();
+					});
+				}else if(data.Status == 'Failure'){
  			   successMessage = data.Message;
 			   if(successMessage.length == 0){
 					successMessage = "Wrong UserName or Password";
@@ -327,6 +340,8 @@ function saveBusinessExpDetails(jsonBEArr,busExpDetailsArr){
 	 var jsonToSaveBE = new Object();
 	 var headerBackBtn=defaultPagePath+'backbtnPage.html';
 	 jsonToSaveBE["employeeId"] = window.localStorage.getItem("EmployeeId");;
+	 jsonToSaveBE["user"] = window.localStorage.getItem("UserName");
+	 jsonToSaveBE["pass"] = window.localStorage.getItem("Password");
 	 jsonToSaveBE["ProcessStatus"] = "0";
 	 jsonToSaveBE["expenseDetails"] = jsonBEArr;
 	 requestRunning = true;
@@ -350,14 +365,26 @@ function saveBusinessExpDetails(jsonBEArr,busExpDetailsArr){
 						 j('#mainHeader').load(headerBackBtn);
 						 j('#mainContainer').load(pageRefSuccess);
 						 //appPageHistory.push(pageRef);
-					 }else if(data.Status=="Error"){
+					 }else if(data.Status=='AuthenticationFailed'){
+
+	         	 	successMessage = data.Message;
+	         	 	headerBackBtn=defaultPagePath+'expenzingImagePage.html';
+					pgRef=defaultPagePath+'loginPage.html';
+					setUserStatusInLocalStorage("Invalid");
+					j('#mainHeader').load(headerBackBtn);
+             		j('#mainContainer').load(pgRef,function() {
+  						document.getElementById("loginErrorMsg").innerHTML = successMessage;
+		 			   j('#loginErrorMsg').hide().fadeIn('slow').delay(4000).fadeOut('slow');
+		 			   j('#loading').hide();
+					});
+				}else if(data.Status=="Error"){
 					 	requestRunning = false;
 					 	successMessage = "Oops!! Something went wrong. Please contact system administrator";
 						j('#mainHeader').load(headerBackBtn);
 					 	j('#mainContainer').load(pageRefFailure);
 					 }else{
 					 	requestRunning = false;
-					 	successMessage = "Error in synching expenses. Please contact system administrator";
+					 	successMessage = "Error in syncing expenses. Please contact system administrator";
 						j('#mainHeader').load(headerBackBtn);
 					 	j('#mainContainer').load(pageRefFailure);
 					 } 
@@ -376,6 +403,8 @@ function saveTravelSettleExpDetails(jsonTSArr,tsExpDetailsArr){
 	 var jsonToSaveTS = new Object();
 	 jsonToSaveTS["employeeId"] = window.localStorage.getItem("EmployeeId");
 	 jsonToSaveTS["expenseDetails"] = jsonTSArr;
+	 jsonToSaveTS["user"] = window.localStorage.getItem("UserName");
+	 jsonToSaveTS["pass"] = window.localStorage.getItem("Password");
 	 requestRunning = true;
      var pageRefSuccess=defaultPagePath+'success.html';
      var pageRefFailure=defaultPagePath+'failure.html';
@@ -395,7 +424,19 @@ function saveTravelSettleExpDetails(jsonTSArr,tsExpDetailsArr){
 					 requestRunning = false;
 					 j('#mainHeader').load(headerBackBtn);
 					 j('#mainContainer').load(pageRefSuccess);
-					 }else if(data.Status=="Error"){
+					 }else if(data.Status=='AuthenticationFailed'){
+
+	         	 	successMessage = data.Message;
+	         	 	headerBackBtn=defaultPagePath+'expenzingImagePage.html';
+					pgRef=defaultPagePath+'loginPage.html';
+					setUserStatusInLocalStorage("Invalid");
+					j('#mainHeader').load(headerBackBtn);
+             		j('#mainContainer').load(pgRef,function() {
+  						document.getElementById("loginErrorMsg").innerHTML = successMessage;
+		 			   j('#loginErrorMsg').hide().fadeIn('slow').delay(4000).fadeOut('slow');
+		 			   j('#loading').hide();
+					});
+				}else if(data.Status=="Error"){
 					 	requestRunning = false;
 						successMessage = "Oops!! Something went wrong. Please contact system administrator.";
 						j('#mainHeader').load(headerBackBtn);
@@ -425,6 +466,8 @@ function sendForApprovalBusinessDetails(jsonBEArr,busExpDetailsArr,accountHeadID
 	 jsonToSaveBE["accountHeadId"]=accountHeadID;
 	 jsonToSaveBE["ProcessStatus"] = "1";
 	 jsonToSaveBE["title"]= window.localStorage.getItem("FirstName")+"/"+jsonToSaveBE["startDate"]+" to "+jsonToSaveBE["endDate"];
+	 jsonToSaveBE["user"] = window.localStorage.getItem("UserName");
+	 jsonToSaveBE["pass"] = window.localStorage.getItem("Password");
 	
      var pageRefSuccess=defaultPagePath+'success.html';
      var pageRefFailure=defaultPagePath+'failure.html';
@@ -458,7 +501,19 @@ j.ajax({
 						 j('#mainContainer').load(pageRefSuccess);
 						// appPageHistory.push(pageRef);
 						}
-					}else if(data.Status=="Failure"){
+					}else if(data.Status=='AuthenticationFailed'){
+
+	         	 	successMessage = data.Message;
+	         	 	headerBackBtn=defaultPagePath+'expenzingImagePage.html';
+					pgRef=defaultPagePath+'loginPage.html';
+					setUserStatusInLocalStorage("Invalid");
+					j('#mainHeader').load(headerBackBtn);
+             		j('#mainContainer').load(pgRef,function() {
+  						document.getElementById("loginErrorMsg").innerHTML = successMessage;
+		 			   j('#loginErrorMsg').hide().fadeIn('slow').delay(4000).fadeOut('slow');
+		 			   j('#loading').hide();
+					});
+				}else if(data.Status=="Failure"){
 					 	successMessage = data.Message;
 						requestRunning = false;
 					 	j('#loading_Cat').hide();
@@ -918,6 +973,8 @@ function syncSubmitTravelDetails(){
 		 jsonToSaveTR["ToLocaton"] = to_id;
 		 jsonToSaveTR["ToLocatonName"] = to_val;
 		 jsonToSaveTR["TravelTitle"] = travel_title;
+	 jsonToSaveTR["user"] = window.localStorage.getItem("UserName");
+	 jsonToSaveTR["pass"] = window.localStorage.getItem("Password");
 		   jsonToSaveTR["EntitlementAllowCheck"] = false;
 		 
 		 var listItineraryTab = document.getElementById('myTab');
@@ -1011,11 +1068,23 @@ function saveTravelRequestAjax(jsonToSaveTR){
 							setTREntitlementExceedMessage(data,jsonToSaveTR);
 							 
 						}
+					  j('#loading_Cat').hide();
 					  successMessage = data.Message;
-                      //alert(window.lang.translate(successMessage));
+                      alert(window.lang.translate(successMessage));
 
-					  
-				  }else if(data.Status=="Success"){
+				  }else if(data.Status=='AuthenticationFailed'){
+
+	         	 	successMessage = data.Message;
+	         	 	headerBackBtn=defaultPagePath+'expenzingImagePage.html';
+					pgRef=defaultPagePath+'loginPage.html';
+					setUserStatusInLocalStorage("Invalid");
+					j('#mainHeader').load(headerBackBtn);
+             		j('#mainContainer').load(pgRef,function() {
+  						document.getElementById("loginErrorMsg").innerHTML = successMessage;
+		 			   j('#loginErrorMsg').hide().fadeIn('slow').delay(4000).fadeOut('slow');
+		 			   j('#loading').hide();
+					});
+				}else if(data.Status=="Success"){
 					  successMessage = data.Message;
 						j('#loading_Cat').hide();
 						j('#mainContainer').load(pageRefSuccess);
@@ -1572,23 +1641,22 @@ function setDelayMessage(returnJsonData,jsonToBeSend,busExpDetailsArr){
 
 function setTREntitlementExceedMessage(returnJsonData,jsonToBeSend){
 		var msg=returnJsonData.Message+".\nThis voucher has exceeded Entitlements. Do you want to proceed?";
-	navigator.notification.confirm(msg,
-		function(buttonIndex){
-            onConfirm(buttonIndex, msg,jsonToBeSend);
-        }, 
-		'confirm', 'Yes, No');
+    var IsEntitlementExceed = confirm(msg);
+    if (IsEntitlementExceed == true) {
+        onConfirm(IsEntitlementExceed, msg, jsonToBeSend);
+    } else {
+        return false;
+    }
+}
 
-	
-	}
-
-function onConfirm(buttonIndex,errormsg,jsonToBeSend){
-    if (buttonIndex === 1){
-    	jsonToBeSend["EntitlementAllowCheck"]=true;
-         j('#loading_Cat').show();
-		saveTravelRequestAjax(jsonToBeSend);
-    }else{
+function onConfirm(IsEntitlementExceed, errormsg, jsonToBeSend) {
+    if (IsEntitlementExceed == true) {
+        jsonToBeSend["EntitlementAllowCheck"] = true;
+        j('#loading_Cat').show();
+        saveTravelRequestAjax(jsonToBeSend);
+    } else {
         j('#loading_Cat').hide();
-    	return false;
+        return false;
     }
 
 }
@@ -2100,7 +2168,19 @@ function resetImageData(){
 							j("#walletSource td.selected").hide();
 							j('#wallet_msg').hide().fadeIn('slow').delay(3000).fadeOut('slow');  
 							j('#loading_Cat').hide();
-						}else if(data.SyncStatus=="Error"){
+						}else if(data.Status=='AuthenticationFailed'){
+
+	         	 	successMessage = data.Message;
+	         	 	headerBackBtn=defaultPagePath+'expenzingImagePage.html';
+					pgRef=defaultPagePath+'loginPage.html';
+					setUserStatusInLocalStorage("Invalid");
+					j('#mainHeader').load(headerBackBtn);
+             		j('#mainContainer').load(pgRef,function() {
+  						document.getElementById("loginErrorMsg").innerHTML = successMessage;
+		 			   j('#loginErrorMsg').hide().fadeIn('slow').delay(4000).fadeOut('slow');
+		 			   j('#loading').hide();
+					});
+				}else if(data.SyncStatus=="Error"){
 							document.getElementById("wallet_msg").innerHTML = "Error: Oops something is wrong, Please Contact System Administer";
 							j('#mainHeader').load(headerBackBtn);
 						 	j('#wallet_msg').hide().fadeIn('slow').delay(3000).fadeOut('slow');
@@ -2139,6 +2219,8 @@ function oprationOnWallet(){
 							jsonFindWalletData["fileName"] = "walletFile_"+window.localStorage.getItem("EmployeeId")+"_"+j(this).find('#para').text()+".jpeg";
 							jsonFindWalletData["fileData"] = data; 
 							jsonFindWalletData["employeeId"] = window.localStorage.getItem("EmployeeId");
+							jsonFindWalletData["user"] = window.localStorage.getItem("UserName");
+							jsonFindWalletData["pass"] = window.localStorage.getItem("Password");
 							jsonWalletArr.push(jsonFindWalletData);
 							jsonWalletIDArr.push(jsonFindWalletId);
 							
@@ -2202,7 +2284,19 @@ function validateValidMobileUser(){
 				}else{
 					window.localStorage.setItem("MobileMapRole",data.MobileMapRole);
 				} */
-	           }else if(data.Status == 'NoAndroidRole'){
+	           }else if(data.Status=='AuthenticationFailed'){
+
+	         	 	successMessage = data.Message;
+	         	 	headerBackBtn=defaultPagePath+'expenzingImagePage.html';
+					pgRef=defaultPagePath+'loginPage.html';
+					setUserStatusInLocalStorage("Invalid");
+					j('#mainHeader').load(headerBackBtn);
+             		j('#mainContainer').load(pgRef,function() {
+  						document.getElementById("loginErrorMsg").innerHTML = successMessage;
+		 			   j('#loginErrorMsg').hide().fadeIn('slow').delay(4000).fadeOut('slow');
+		 			   j('#loading').hide();
+					});
+				}else if(data.Status == 'NoAndroidRole'){
 	         	 	successMessage = data.Message;
 	         	 	headerBackBtn=defaultPagePath+'expenzingImagePage.html';
 					pgRef=defaultPagePath+'loginPage.html';
@@ -2733,6 +2827,8 @@ function syncSubmitEmpAdvance(){
 		 jsonToSaveEA["empAdvAmount"] = empAdvAmount;
 		 jsonToSaveEA["empAdvType_id"] = empAdvType_id;
 		 jsonToSaveEA["empAccHead_id"] = empAccHead_id;
+		 jsonToSaveEA["user"] = window.localStorage.getItem("UserName");
+		 jsonToSaveEA["pass"] = window.localStorage.getItem("Password");
 		 
 		 
 		 saveEmployeeAdvanceAjax(jsonToSaveEA);
@@ -2761,7 +2857,19 @@ function saveEmployeeAdvanceAjax(jsonToSaveEA){
 						j('#mainHeader').load(headerBackBtn);
 					 	j('#mainContainer').load(pageRefSuccess);
 						
-					}else if(data.Status=="Failure"){
+					}else if(data.Status=='AuthenticationFailed'){
+
+	         	 	successMessage = data.Message;
+	         	 	headerBackBtn=defaultPagePath+'expenzingImagePage.html';
+					pgRef=defaultPagePath+'loginPage.html';
+					setUserStatusInLocalStorage("Invalid");
+					j('#mainHeader').load(headerBackBtn);
+             		j('#mainContainer').load(pgRef,function() {
+  						document.getElementById("loginErrorMsg").innerHTML = successMessage;
+		 			   j('#loginErrorMsg').hide().fadeIn('slow').delay(4000).fadeOut('slow');
+		 			   j('#loading').hide();
+					});
+				}else if(data.Status=="Failure"){
 					 	successMessage = data.Message;
 						requestRunning = false;
 					 	j('#loading_Cat').hide();
@@ -3081,6 +3189,8 @@ function sendForApprovalBusinessDetailsWithEa(jsonBEArr,jsonEAArr,busExpDetailsA
 	 jsonToSaveBE["accountHeadId"]=accountHeadID;
 	 jsonToSaveBE["ProcessStatus"] = "1";
 	 jsonToSaveBE["title"]= window.localStorage.getItem("FirstName")+"/"+jsonToSaveBE["startDate"]+" to "+jsonToSaveBE["endDate"];
+     jsonToSaveBE["user"] = window.localStorage.getItem("UserName");
+	 jsonToSaveBE["pass"] = window.localStorage.getItem("Password");
 	
      var pageRefSuccess=defaultPagePath+'success.html';
      var pageRefFailure=defaultPagePath+'failure.html';
@@ -3118,7 +3228,19 @@ j.ajax({
 						 j('#mainContainer').load(pageRefSuccess);
 						// appPageHistory.push(pageRef);
 						}
-					}else if(data.Status=="Failure"){
+					}else if(data.Status=='AuthenticationFailed'){
+
+	         	 	successMessage = data.Message;
+	         	 	headerBackBtn=defaultPagePath+'expenzingImagePage.html';
+					pgRef=defaultPagePath+'loginPage.html';
+					setUserStatusInLocalStorage("Invalid");
+					j('#mainHeader').load(headerBackBtn);
+             		j('#mainContainer').load(pgRef,function() {
+  						document.getElementById("loginErrorMsg").innerHTML = successMessage;
+		 			   j('#loginErrorMsg').hide().fadeIn('slow').delay(4000).fadeOut('slow');
+		 			   j('#loading').hide();
+					});
+				}else if(data.Status=="Failure"){
 					 	successMessage = data.Message;
 						requestRunning = false;
 					 	j('#loading_Cat').hide();

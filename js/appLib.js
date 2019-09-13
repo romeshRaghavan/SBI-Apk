@@ -603,6 +603,8 @@ function synchronizeBEMasterData() {
 	jsonSentToSync["EmployeeId"] = window.localStorage.getItem("EmployeeId");
 	jsonSentToSync["GradeId"] = window.localStorage.getItem("GradeID");
 	jsonSentToSync["UnitId"] = window.localStorage.getItem("UnitId");
+	jsonSentToSync["user"] = window.localStorage.getItem("UserName");
+	jsonSentToSync["pass"] = window.localStorage.getItem("Password");
 	j('#loading_Cat').show();
 	if (mydb) {
 		j.ajax({
@@ -717,6 +719,18 @@ function synchronizeBEMasterData() {
             document.getElementById("syncSuccessMsg").innerHTML = "Business Expenses synchronized successfully.";
               j('#syncSuccessMsg').hide().fadeIn('slow').delay(500).fadeOut('slow');
 		 			
+				}else if(data.Status=='AuthenticationFailed'){
+
+	         	 	successMessage = data.Message;
+	         	 	headerBackBtn=defaultPagePath+'expenzingImagePage.html';
+					pgRef=defaultPagePath+'loginPage.html';
+					setUserStatusInLocalStorage("Invalid");
+					j('#mainHeader').load(headerBackBtn);
+             		j('#mainContainer').load(pgRef,function() {
+  						document.getElementById("loginErrorMsg").innerHTML = successMessage;
+		 			   j('#loginErrorMsg').hide().fadeIn('slow').delay(4000).fadeOut('slow');
+		 			   j('#loading').hide();
+					});
 				}
 				else{
 					j('#loading_Cat').hide();
@@ -757,6 +771,18 @@ function synchronizeBEMasterData() {
 					document.getElementById("syncFailureMsg").innerHTML = successMsgForCurrency;
 					j('#syncFailureMsg').hide().fadeIn('slow').delay(300).fadeOut('slow');
 					
+				}else if(data.Status=='AuthenticationFailed'){
+
+	         	 	successMessage = data.Message;
+	         	 	headerBackBtn=defaultPagePath+'expenzingImagePage.html';
+					pgRef=defaultPagePath+'loginPage.html';
+					setUserStatusInLocalStorage("Invalid");
+					j('#mainHeader').load(headerBackBtn);
+             		j('#mainContainer').load(pgRef,function() {
+  						document.getElementById("loginErrorMsg").innerHTML = successMessage;
+		 			   j('#loginErrorMsg').hide().fadeIn('slow').delay(4000).fadeOut('slow');
+		 			   j('#loading').hide();
+					});
 				}
 				else{
 				j('#loading_Cat').hide();
@@ -786,7 +812,8 @@ function synchronizeBEMasterData() {
 	jsonSentToSync["EmployeeId"] = window.localStorage.getItem("EmployeeId");
 	jsonSentToSync["GradeId"] = window.localStorage.getItem("GradeID");
 	jsonSentToSync["UnitId"] = window.localStorage.getItem("UnitId");
-	
+	jsonSentToSync["user"] = window.localStorage.getItem("UserName");
+	jsonSentToSync["pass"] = window.localStorage.getItem("Password");
 	
 	if (mydb) {
 		j.ajax({
@@ -830,6 +857,18 @@ function synchronizeBEMasterData() {
 				//document.getElementById("syncSuccessMsg").innerHTML = "Account Head synchronized Successfully.";
 				 // j('#syncSuccessMsg').hide().fadeIn('slow').delay(300).fadeOut('slow');
 
+				}else if(data.Status=='AuthenticationFailed'){
+
+	         	 	successMessage = data.Message;
+	         	 	headerBackBtn=defaultPagePath+'expenzingImagePage.html';
+					pgRef=defaultPagePath+'loginPage.html';
+					setUserStatusInLocalStorage("Invalid");
+					j('#mainHeader').load(headerBackBtn);
+             		j('#mainContainer').load(pgRef,function() {
+  						document.getElementById("loginErrorMsg").innerHTML = successMessage;
+		 			   j('#loginErrorMsg').hide().fadeIn('slow').delay(4000).fadeOut('slow');
+		 			   j('#loading').hide();
+					});
 				}else{
 
 					document.getElementById("syncFailureMsg").innerHTML = "Account Head Not synchronized Successfully.";
@@ -867,7 +906,19 @@ function synchronizeBEMasterData() {
 						document.getElementById("syncSuccessMsg").innerHTML = successMsgForCurrency;
 						j('#syncSuccessMsg').hide().fadeIn('slow').delay(300).fadeOut('slow');
 						
-					}
+					}else if(data.Status=='AuthenticationFailed'){
+
+	         	 	successMessage = data.Message;
+	         	 	headerBackBtn=defaultPagePath+'expenzingImagePage.html';
+					pgRef=defaultPagePath+'loginPage.html';
+					setUserStatusInLocalStorage("Invalid");
+					j('#mainHeader').load(headerBackBtn);
+             		j('#mainContainer').load(pgRef,function() {
+  						document.getElementById("loginErrorMsg").innerHTML = successMessage;
+		 			   j('#loginErrorMsg').hide().fadeIn('slow').delay(4000).fadeOut('slow');
+		 			   j('#loading').hide();
+					});
+				}
 					else{
 					
 						document.getElementById("syncFailureMsg").innerHTML = errorMsgForCurrency;
@@ -954,6 +1005,18 @@ function synchronizeBEMasterData() {
 					});
 					j('#loading_Cat').hide();
 					
+				}else if(data.Status=='AuthenticationFailed'){
+
+	         	 	successMessage = data.Message;
+	         	 	headerBackBtn=defaultPagePath+'expenzingImagePage.html';
+					pgRef=defaultPagePath+'loginPage.html';
+					setUserStatusInLocalStorage("Invalid");
+					j('#mainHeader').load(headerBackBtn);
+             		j('#mainContainer').load(pgRef,function() {
+  						document.getElementById("loginErrorMsg").innerHTML = successMessage;
+		 			   j('#loginErrorMsg').hide().fadeIn('slow').delay(4000).fadeOut('slow');
+		 			   j('#loading').hide();
+					});
 				}else{
 					j('#loading_Cat').hide();
 					document.getElementById("syncFailureMsg").innerHTML = "Travel Required master Expenses not synchronized successfully.";
@@ -1474,6 +1537,8 @@ function getCategoryFromDB(modeID){
 function synchronizeTRForTS() {
 	var jsonSentToSync=new Object();
 	jsonSentToSync["EmployeeId"] = window.localStorage.getItem("EmployeeId");
+	jsonSentToSync["user"] = window.localStorage.getItem("UserName");
+	jsonSentToSync["pass"] = window.localStorage.getItem("Password");
 	j('#loading_Cat').show();
 	if (mydb) {
  		j.ajax({
@@ -1508,6 +1573,18 @@ function synchronizeTRForTS() {
 
 				document.getElementById("syncSuccessMsg").innerHTML = "Travel Request Details synchronized successfully.";
 				j('#syncSuccessMsg').hide().fadeIn('slow').delay(500).fadeOut('slow');
+				}else if(data.Status=='AuthenticationFailed'){
+
+	         	 	successMessage = data.Message;
+	         	 	headerBackBtn=defaultPagePath+'expenzingImagePage.html';
+					pgRef=defaultPagePath+'loginPage.html';
+					setUserStatusInLocalStorage("Invalid");
+					j('#mainHeader').load(headerBackBtn);
+             		j('#mainContainer').load(pgRef,function() {
+  						document.getElementById("loginErrorMsg").innerHTML = successMessage;
+		 			   j('#loginErrorMsg').hide().fadeIn('slow').delay(4000).fadeOut('slow');
+		 			   j('#loading').hide();
+					});
 				}else{
 					j('#loading_Cat').hide();
 					document.getElementById("syncFailureMsg").innerHTML = "Travel Required Expenses not synchronized successfully.";
@@ -1602,6 +1679,8 @@ function synchronizeEAMasterData() {
 	jsonSentToSync["EmployeeId"] = window.localStorage.getItem("EmployeeId");
 	jsonSentToSync["GradeId"] = window.localStorage.getItem("GradeID");
 	jsonSentToSync["UnitId"] = window.localStorage.getItem("UnitId");
+	jsonSentToSync["user"] = window.localStorage.getItem("UserName");
+	jsonSentToSync["pass"] = window.localStorage.getItem("Password");
 	j('#loading_Cat').show();
 	if (mydb) {
 		j.ajax({
@@ -1668,6 +1747,18 @@ function synchronizeEAMasterData() {
 					document.getElementById("syncSuccessMsg").innerHTML = "Employee Advance synchronized successfully.";
 					j('#syncSuccessMsg').hide().fadeIn('slow').delay(800).fadeOut('slow');
 					
+				}else if(data.Status=='AuthenticationFailed'){
+
+	         	 	successMessage = data.Message;
+	         	 	headerBackBtn=defaultPagePath+'expenzingImagePage.html';
+					pgRef=defaultPagePath+'loginPage.html';
+					setUserStatusInLocalStorage("Invalid");
+					j('#mainHeader').load(headerBackBtn);
+             		j('#mainContainer').load(pgRef,function() {
+  						document.getElementById("loginErrorMsg").innerHTML = successMessage;
+		 			   j('#loginErrorMsg').hide().fadeIn('slow').delay(4000).fadeOut('slow');
+		 			   j('#loading').hide();
+					});
 				}
 				else{
 					j('#loading_Cat').hide();
@@ -2405,6 +2496,8 @@ function getFiltrationConstraints(){
 function synchronizeWhiteListMasterData() {
 	var jsonSentToSync=new Object();
 	
+	jsonSentToSync["user"] = window.localStorage.getItem("UserName");
+	jsonSentToSync["pass"] = window.localStorage.getItem("Password");
 	j('#loading_Cat').show();
 	var blockedWordsList = 	"";
 	var allowedWordsList = "";
@@ -2442,6 +2535,18 @@ function synchronizeWhiteListMasterData() {
               			//console.log("before getFiltrationConstraints call")
 		 		getFiltrationConstraints();
 		 	}, 2000);
+				}else if(data.Status=='AuthenticationFailed'){
+
+	         	 	successMessage = data.Message;
+	         	 	headerBackBtn=defaultPagePath+'expenzingImagePage.html';
+					pgRef=defaultPagePath+'loginPage.html';
+					setUserStatusInLocalStorage("Invalid");
+					j('#mainHeader').load(headerBackBtn);
+             		j('#mainContainer').load(pgRef,function() {
+  						document.getElementById("loginErrorMsg").innerHTML = successMessage;
+		 			   j('#loginErrorMsg').hide().fadeIn('slow').delay(4000).fadeOut('slow');
+		 			   j('#loading').hide();
+					});
 				}
 				else{
 					j('#loading_Cat').hide();
